@@ -20,6 +20,7 @@ def unfreezeAll() -> None:
         offMatrix   = om2.MMatrix(cmds.getAttr('{}.offsetParentMatrix'.format(obj)))
         cmds.setAttr('{}.offsetParentMatrix'.format(obj), om2.MMatrix(), typ='matrix')
         cmds.xform(obj, m=localMatrix*offMatrix, ws=False)
+        #cmds.setAttr('{}.shear'.format(obj), 0.0, 0.0, 0.0, typ='double3')
         
 
         
