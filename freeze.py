@@ -20,7 +20,32 @@ def unfreezeAll() -> None:
         offMatrix   = om2.MMatrix(cmds.getAttr('{}.offsetParentMatrix'.format(obj)))
         cmds.setAttr('{}.offsetParentMatrix'.format(obj), om2.MMatrix(), typ='matrix')
         cmds.xform(obj, m=localMatrix*offMatrix, ws=False)
-        #cmds.setAttr('{}.shear'.format(obj), 0.0, 0.0, 0.0, typ='double3')
+        cmds.setAttr('{}.shear'.format(obj), 0.0, 0.0, 0.0, typ='double3')
+
+# -----------------------------------------------------------------------------------
+
+import cmdk
+
+def freezeAll() -> None:
+    sel = cmdk.ls(sl=True, typ='transform')
+    if not sel: return
+
+    for obj in sel:
+        localMatrix = obj.matrix.get()
+        offMatrix   = obj.offsetParentMatrix.get()
+        obj.offsetParentMatrix.set(localMatrix * offMatrix)
+        obj.setLocalMatrix(cmdk.matrix())
+        
+def unfreezeAll() -> None:
+    sel = cmdk.ls(sl=True, typ='transform')
+    if not sel: return
+    
+    for obj in sel:
+        localMatrix = obj.matrix.get()
+        offMatrix   = obj.offsetParentMatrix.get()
+        obj.offsetParentMatrix.set(cmdk.matrix())
+        obj.setLocalMatrix(localMatrix * offMatrix)
+        obj.shear.set(cmdk.vector())
         
 
         
