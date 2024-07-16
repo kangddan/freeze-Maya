@@ -9,6 +9,9 @@ def freezeAll() -> None:
         localMatrix = om2.MMatrix(cmds.getAttr('{}.matrix'.format(obj)))
         offMatrix   = om2.MMatrix(cmds.getAttr('{}.offsetParentMatrix'.format(obj)))
         cmds.setAttr('{}.offsetParentMatrix'.format(obj), localMatrix*offMatrix, typ='matrix')
+        
+        if cmds.nodeType(obj) == 'joint':
+            cmds.setAttr('{}.jointOrient'.format(obj), 0.0, 0.0, 0.0, typ='double3')
         cmds.xform(obj, m=om2.MMatrix(), ws=False)
     
 def unfreezeAll() -> None:
@@ -19,9 +22,12 @@ def unfreezeAll() -> None:
         localMatrix = om2.MMatrix(cmds.getAttr('{}.matrix'.format(obj)))
         offMatrix   = om2.MMatrix(cmds.getAttr('{}.offsetParentMatrix'.format(obj)))
         cmds.setAttr('{}.offsetParentMatrix'.format(obj), om2.MMatrix(), typ='matrix')
+        
+        if cmds.nodeType(obj) == 'joint':
+            cmds.setAttr('{}.jointOrient'.format(obj), 0.0, 0.0, 0.0, typ='double3')
         cmds.xform(obj, m=localMatrix*offMatrix, ws=False)
         cmds.setAttr('{}.shear'.format(obj), 0.0, 0.0, 0.0, typ='double3')
-
+        
 # -----------------------------------------------------------------------------------
 
 import cmdk
@@ -31,9 +37,12 @@ def freezeAll() -> None:
     if not sel: return
 
     for obj in sel:
-        localMatrix = obj.matrix.get()
+        localMatrix = obj.getLocalMatrix()
         offMatrix   = obj.offsetParentMatrix.get()
         obj.offsetParentMatrix.set(localMatrix * offMatrix)
+        
+        if obj.type == 'joint':
+            obj.jointOrient.set(0, 0, 0)
         obj.setLocalMatrix(cmdk.matrix())
         
 def unfreezeAll() -> None:
@@ -41,11 +50,11 @@ def unfreezeAll() -> None:
     if not sel: return
     
     for obj in sel:
-        localMatrix = obj.matrix.get()
+        localMatrix = obj.getLocalMatrix()
         offMatrix   = obj.offsetParentMatrix.get()
         obj.offsetParentMatrix.set(cmdk.matrix())
+        
+        if obj.type == 'joint':
+            obj.jointOrient.set(0, 0, 0)
         obj.setLocalMatrix(localMatrix * offMatrix)
-        obj.shear.set(cmdk.vector())
-        
-
-        
+        obj.shear.set(0, 0, 0)
