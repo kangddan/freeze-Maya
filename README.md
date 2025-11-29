@@ -1,3 +1,4 @@
 ![Python version](https://img.shields.io/badge/maya-2020%2B-blue)
+offsetParentMateix可以模拟c4d的冻结行为，将冻结的数据存在更安全的地方，
+随时解冻 并且避免默认冻结行为带来的矩阵错误
 
-更安全的冻结maya坐标, 有效避免冻结带来的矩阵错误
